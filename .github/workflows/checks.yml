@@ -1,0 +1,54 @@
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Prepare Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Check if the files are formatted
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          arguments: --check --message-format short
+
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Prepare Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Cache the artifacts of building
+        uses: actions/cache@v3
+        # From https://github.com/actions/cache/blob/ac25611caef967612169ab7e95533cf932c32270/examples.md?plain=1#L586
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Run test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
