@@ -1,0 +1,6 @@
+[workspace]
+members = [
+  "logask-api-rest-server",
+  "logask-core",
+  "logask-repository"
+]
