@@ -6,3 +6,15 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+logask-core = { path = "../logask-core" }
+thiserror = "1.0.38"
+
+[dependencies.sea-orm]
+version = "0.10.5"
+optional = true
+features = ["sqlx-postgres", "runtime-tokio-rustls", "macros"]
+
+[features]
+default = ["db"]
+db = ["sea-orm"]
+in-memory = []
