@@ -1,8 +1,9 @@
 use logask_core::model::{entity::task::Task, id::Id};
 
+#[async_trait::async_trait]
 pub trait TaskRepository {
-    fn get(&self, id: &Id<Task>) -> Option<Task>;
-    fn update(&mut self, id: &Task);
+    async fn get(&self, id: &Id<Task>) -> Option<&Task>;
+    async fn update(&mut self, id: &Task);
 }
 
 pub trait WithTaskRepository {

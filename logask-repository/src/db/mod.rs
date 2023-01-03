@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use sea_orm::{Database, DatabaseConnection};
+use sea_orm::Database;
 
 use crate::{
     traits::{task::WithTaskRepository, Registry},
@@ -32,7 +32,7 @@ impl DBRepositoryRegistry {
         let ctx = Arc::new(Context::new(db));
 
         Ok(Self {
-            task: DBTaskRepository { ctx },
+            task: DBTaskRepository(ctx),
         })
     }
 }

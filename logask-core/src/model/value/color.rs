@@ -1,6 +1,6 @@
 use std::convert::TryInto;
 
-#[derive(Eq, PartialEq)]
+#[derive(Eq, PartialEq, Clone, Copy)]
 pub struct Color {
     pub r: u8,
     pub g: u8,

@@ -10,7 +10,7 @@ use crate::model::{
 
 use super::project::Project;
 
-#[derive(WithId)]
+#[derive(WithId, Clone)]
 pub struct Task {
     id: Id<Self>,
     name: String,
