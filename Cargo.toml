@@ -3,5 +3,6 @@ members = [
   "logask-api-rest-server",
   "logask-core",
   "logask-repository",
+  "logask-repository/migration",
   "logask-derives"
 ]
