@@ -1,12 +1,12 @@
 use logask_core::model::{entity::task::Task, id::Id};
 
-use crate::error::RepositoryResult;
+use crate::error::{Created, Read, RepositoryResult, Update};
 
 #[async_trait::async_trait]
 pub trait TaskRepository {
-    async fn create(&mut self, task: &Task) -> RepositoryResult<Task>;
-    async fn get(&self, id: &Id<Task>) -> RepositoryResult<Option<Task>>;
-    async fn update(&mut self, id: &Task) -> RepositoryResult<Task>;
+    async fn create(&mut self, task: &Task) -> RepositoryResult<Created<Task>>;
+    async fn get(&self, id: &Id<Task>) -> RepositoryResult<Read<Option<Task>>>;
+    async fn update(&mut self, id: &Task) -> RepositoryResult<Update<Task>>;
 }
 
 pub trait WithTaskRepository {

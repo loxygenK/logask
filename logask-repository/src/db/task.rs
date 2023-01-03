@@ -6,7 +6,7 @@ use sea_orm::{
 };
 
 use crate::{
-    error::{RepositoryError, RepositoryReport::*, RepositoryResult},
+    error::{Created, Read, RepositoryError, RepositoryResult, Update},
     traits::task::TaskRepository,
 };
 
@@ -16,7 +16,7 @@ pub struct DBTaskRepository(pub(crate) Arc<Context>);
 
 #[async_trait::async_trait]
 impl TaskRepository for DBTaskRepository {
-    async fn create(&mut self, task: &Task) -> RepositoryResult<Task> {
+    async fn create(&mut self, task: &Task) -> RepositoryResult<Created<Task>> {
         let new_model = gen::task::Model::from(task.clone())
             .into_active_model()
             .insert(&self.0.db)
@@ -26,7 +26,7 @@ impl TaskRepository for DBTaskRepository {
         Ok(Created(new_model.into_task_with_children(vec![])))
     }
 
-    async fn get(&self, id: &Id<Task>) -> RepositoryResult<Option<Task>> {
+    async fn get(&self, id: &Id<Task>) -> RepositoryResult<Read<Option<Task>>> {
         let id = Uuid::parse_str(&id.to_string()).unwrap();
 
         let partial_task = gen::task::Entity::find_by_id(id).one(&self.0.db).await;
@@ -51,7 +51,7 @@ impl TaskRepository for DBTaskRepository {
         )))
     }
 
-    async fn update(&mut self, task: &Task) -> RepositoryResult<Task> {
+    async fn update(&mut self, task: &Task) -> RepositoryResult<Update<Task>> {
         let id = Uuid::parse_str(&task.id().to_string()).unwrap();
 
         let existing_task = gen::task::Entity::find_by_id(id)
@@ -60,17 +60,20 @@ impl TaskRepository for DBTaskRepository {
             .map_err(RepositoryError::from)?;
 
         if existing_task.is_none() {
-            return self.create(task).await;
+            return self
+                .create(task)
+                .await
+                .map(|Created(task)| Update::Created(task));
         }
 
-        let updated = gen::task::Model::from(task.clone())
+        gen::task::Model::from(task.clone())
             .into_active_model()
             .update(&self.0.db)
             .await
             .map_err(RepositoryError::from)?;
 
         if let Ok(Read(Some(task))) = self.get(&task.id()).await {
-            Ok(Updated(task))
+            Ok(Update::Done(task))
         } else {
             Err(RepositoryError::ValidationFailure)
         }

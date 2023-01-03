@@ -1,5 +1,12 @@
 use sea_orm::DbErr;
 
+pub struct Created<T>(pub T);
+pub enum Update<T> {
+    Done(T),
+    Created(T),
+}
+pub struct Read<T>(pub T);
+
 pub enum RepositoryReport<T> {
     Created(T),
     Read(T),
@@ -17,4 +24,4 @@ pub enum RepositoryError {
     ValidationFailure,
 }
 
-pub type RepositoryResult<T> = Result<RepositoryReport<T>, RepositoryError>;
+pub type RepositoryResult<T> = Result<T, RepositoryError>;
