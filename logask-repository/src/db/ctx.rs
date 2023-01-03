@@ -3,7 +3,7 @@ use std::sync::RwLock;
 use sea_orm::DatabaseConnection;
 
 pub(crate) struct Context {
-    db: RwLock<DatabaseConnection>,
+    pub(crate) db: RwLock<DatabaseConnection>,
 }
 
 impl Context {

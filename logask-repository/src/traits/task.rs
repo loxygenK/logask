@@ -1,8 +1,8 @@
 use logask_core::model::{entity::task::Task, id::Id};
 
 pub trait TaskRepository {
-    fn get(id: &Id<Task>) -> Option<Task>;
-    fn update(id: &Task);
+    fn get(&self, id: &Id<Task>) -> Option<Task>;
+    fn update(&mut self, id: &Task);
 }
 
 pub trait WithTaskRepository {
