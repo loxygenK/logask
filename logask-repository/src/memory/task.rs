@@ -5,7 +5,10 @@ use logask_core::model::{
     id::{Id, WithId},
 };
 
-use crate::{error::RepositoryResult, traits::task::TaskRepository};
+use crate::{
+    error::{RepositoryReport::*, RepositoryResult},
+    traits::task::TaskRepository,
+};
 
 pub struct InMemoryTaskRepository(HashMap<Id<Task>, Task>);
 impl InMemoryTaskRepository {
@@ -35,7 +38,7 @@ impl TaskRepository for InMemoryTaskRepository {
     async fn get(&self, id: &Id<Task>) -> RepositoryResult<Option<Task>> {
         tokio::time::sleep(Duration::from_millis(500)).await;
 
-        Ok(self.0.get(id).cloned())
+        Ok(Read(self.0.get(id).cloned()))
     }
 
     async fn update(&mut self, task: &Task) -> RepositoryResult<()> {
@@ -43,6 +46,6 @@ impl TaskRepository for InMemoryTaskRepository {
 
         self.0.insert(task.id().clone(), task.clone());
 
-        Ok(())
+        Ok(Updated)
     }
 }
