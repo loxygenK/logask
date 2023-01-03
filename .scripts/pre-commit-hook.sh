@@ -7,11 +7,11 @@ _main() {
     return 0
   fi
 
-  local unformated_files=$(
+  local unformatted_files=$(
     echo $checked_files | \
       xargs cargo fmt --check --message-format short -- | \
-      uniq | \
-      sort
+      sort | \
+      uniq
   )
 
   [ "$unformatted_files" == "" ]
@@ -21,7 +21,9 @@ _main() {
     echo "No style issue found. Commiting!"
   else
     echo "The file(s) below has some code style issue - run 'cargo fmt' to fix them"
-    echo $unformated_files
+    for file in $unformatted_files; do
+      echo $file
+    done
   fi
 
   return $has_error

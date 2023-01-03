@@ -1,14 +1,34 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+use std::future::Future;
+
+use db::DBRepositoryRegistry;
+use memory::InMemoryRepositoryRegistry;
+use traits::Registry;
+
+pub mod db;
+pub mod memory;
+pub mod traits;
+
+#[cfg(not(any(feature = "db", feature = "in-memory")))]
+compile_error!("Either of features `db` or `in-memory` should be specified");
+
+#[cfg(all(feature = "db", feature = "in-memory"))]
+compile_error!("Features `db` or `in-memory` cannot be specified at once");
+
+pub enum InitializeError {
+    ConnectionFail,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[cfg(feature = "db")]
+pub async fn initialize(
+    username: String,
+    password: String,
+    host: String,
+    database: String,
+) -> Result<impl Registry, InitializeError> {
+    DBRepositoryRegistry::initialize(username, password, host, database).await
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+#[cfg(feature = "in-memory")]
+pub async fn initialize() -> impl Future<Output = Result<impl Registry, InitializeError>> {
+    InMemoryRepositoryRegistry::new()
 }
