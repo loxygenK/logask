@@ -35,6 +35,14 @@ impl InMemoryTaskRepository {
 
 #[async_trait::async_trait]
 impl TaskRepository for InMemoryTaskRepository {
+    async fn create(&mut self, task: &Task) -> RepositoryResult<Task> {
+        tokio::time::sleep(Duration::from_millis(500)).await;
+
+        self.0.insert(task.id().clone(), task.clone());
+
+        Ok(Created(task.clone()))
+    }
+
     async fn get(&self, id: &Id<Task>) -> RepositoryResult<Option<Task>> {
         tokio::time::sleep(Duration::from_millis(500)).await;
 

@@ -4,6 +4,7 @@ use crate::error::RepositoryResult;
 
 #[async_trait::async_trait]
 pub trait TaskRepository {
+    async fn create(&mut self, task: &Task) -> RepositoryResult<Task>;
     async fn get(&self, id: &Id<Task>) -> RepositoryResult<Option<Task>>;
     async fn update(&mut self, id: &Task) -> RepositoryResult<()>;
 }
