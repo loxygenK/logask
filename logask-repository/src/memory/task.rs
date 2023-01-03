@@ -1,9 +1,6 @@
 use std::{collections::HashMap, time::Duration};
 
-use logask_core::model::{
-    entity::task::Task,
-    id::{Id, WithId},
-};
+use logask_core::model::{entity::task::Task, id::Id};
 
 use crate::{
     error::{Created, Read, RepositoryResult, Update},
@@ -52,7 +49,7 @@ impl TaskRepository for InMemoryTaskRepository {
     async fn update(&mut self, task: &Task) -> RepositoryResult<Update<Task>> {
         tokio::time::sleep(Duration::from_millis(500)).await;
 
-        let exist_before = self.0.contains_key(&task.id());
+        let exist_before = self.0.contains_key(task.id());
         self.0.insert(task.id().clone(), task.clone());
 
         if exist_before {

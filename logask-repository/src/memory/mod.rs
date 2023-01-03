@@ -4,11 +4,21 @@ use crate::traits::{task::WithTaskRepository, Registry};
 
 use self::task::InMemoryTaskRepository;
 
-pub struct InMemoryRepositoryRegistry {}
+pub struct InMemoryRepositoryRegistry {
+    task_repo: InMemoryTaskRepository,
+}
 
 impl InMemoryRepositoryRegistry {
     pub fn new() -> Self {
-        Self {}
+        Self {
+            task_repo: InMemoryTaskRepository::new(),
+        }
+    }
+}
+
+impl Default for InMemoryRepositoryRegistry {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -18,6 +28,6 @@ impl WithTaskRepository for InMemoryRepositoryRegistry {
     type Repo = InMemoryTaskRepository;
 
     fn get_task_repotiroy(&self) -> &Self::Repo {
-        todo!()
+        &self.task_repo
     }
 }

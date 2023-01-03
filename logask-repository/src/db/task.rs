@@ -72,7 +72,7 @@ impl TaskRepository for DBTaskRepository {
             .await
             .map_err(RepositoryError::from)?;
 
-        if let Ok(Read(Some(task))) = self.get(&task.id()).await {
+        if let Ok(Read(Some(task))) = self.get(task.id()).await {
             Ok(Update::Done(task))
         } else {
             Err(RepositoryError::ValidationFailure)

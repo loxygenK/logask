@@ -1,5 +1,3 @@
-use sea_orm::ActiveValue::*;
-
 use super::gen;
 use logask_core::model::{entity::task::Task, id::Id};
 

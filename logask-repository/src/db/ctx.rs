@@ -1,5 +1,3 @@
-use std::sync::RwLock;
-
 use sea_orm::DatabaseConnection;
 
 pub(crate) struct Context {
