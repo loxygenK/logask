@@ -7,13 +7,6 @@ pub enum Update<T> {
 }
 pub struct Read<T>(pub T);
 
-pub enum RepositoryReport<T> {
-    Created(T),
-    Read(T),
-    Updated(T),
-    Deleted,
-}
-
 #[derive(Debug, thiserror::Error)]
 #[cfg_attr(release, error("error during loading/saving data to the database"))]
 pub enum RepositoryError {
