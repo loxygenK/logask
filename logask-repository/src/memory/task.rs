@@ -49,11 +49,16 @@ impl TaskRepository for InMemoryTaskRepository {
         Ok(Read(self.0.get(id).cloned()))
     }
 
-    async fn update(&mut self, task: &Task) -> RepositoryResult<()> {
+    async fn update(&mut self, task: &Task) -> RepositoryResult<Task> {
         tokio::time::sleep(Duration::from_millis(500)).await;
 
+        let exist_before = self.0.contains_key(&task.id());
         self.0.insert(task.id().clone(), task.clone());
 
-        Ok(Updated)
+        if exist_before {
+            Ok(Updated(task.clone()))
+        } else {
+            Ok(Created(task.clone()))
+        }
     }
 }
