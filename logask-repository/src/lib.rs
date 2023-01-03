@@ -1,10 +1,13 @@
-use std::future::Future;
-
+#[cfg(feature = "db")]
 use db::DBRepositoryRegistry;
+
+#[cfg(feature = "in-memory")]
 use memory::InMemoryRepositoryRegistry;
+
 use traits::Registry;
 
 pub mod db;
+pub mod error;
 pub mod memory;
 pub mod traits;
 

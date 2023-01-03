@@ -1,11 +1,11 @@
 use std::{collections::HashMap, time::Duration};
 
-use logask_core::model::{
-    entity::task::Task,
-    id::{Id, WithId},
-};
+use logask_core::model::{entity::task::Task, id::Id};
 
-use crate::traits::task::TaskRepository;
+use crate::{
+    error::{Created, Read, RepositoryResult, Update},
+    traits::task::TaskRepository,
+};
 
 pub struct InMemoryTaskRepository(HashMap<Id<Task>, Task>);
 impl InMemoryTaskRepository {
@@ -32,15 +32,30 @@ impl InMemoryTaskRepository {
 
 #[async_trait::async_trait]
 impl TaskRepository for InMemoryTaskRepository {
-    async fn get(&self, id: &Id<Task>) -> Option<&Task> {
-        tokio::time::sleep(Duration::from_millis(500)).await;
-
-        self.0.get(id)
-    }
-
-    async fn update(&mut self, task: &Task) {
+    async fn create(&mut self, task: &Task) -> RepositoryResult<Created<Task>> {
         tokio::time::sleep(Duration::from_millis(500)).await;
 
         self.0.insert(task.id().clone(), task.clone());
+
+        Ok(Created(task.clone()))
+    }
+
+    async fn get(&self, id: &Id<Task>) -> RepositoryResult<Read<Option<Task>>> {
+        tokio::time::sleep(Duration::from_millis(500)).await;
+
+        Ok(Read(self.0.get(id).cloned()))
+    }
+
+    async fn update(&mut self, task: &Task) -> RepositoryResult<Update<Task>> {
+        tokio::time::sleep(Duration::from_millis(500)).await;
+
+        let exist_before = self.0.contains_key(task.id());
+        self.0.insert(task.id().clone(), task.clone());
+
+        if exist_before {
+            Ok(Update::Done(task.clone()))
+        } else {
+            Ok(Update::Created(task.clone()))
+        }
     }
 }
