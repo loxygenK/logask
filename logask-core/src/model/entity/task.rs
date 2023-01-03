@@ -15,9 +15,9 @@ pub struct Task {
     id: Id<Self>,
     name: String,
     description: String,
-    project: Parent<IdRef<Project>>,
-    parent: Parent<IdRef<Task>>,
-    children: Children<IdRef<Task>>,
+    project: Id<Project>,
+    parent: Option<Id<Task>>,
+    children: Vec<Id<Task>>,
 }
 
 impl Task {
@@ -25,9 +25,9 @@ impl Task {
         id: Id<Self>,
         name: String,
         description: String,
-        project: Parent<IdRef<Project>>,
-        parent: Parent<IdRef<Task>>,
-        children: Children<IdRef<Task>>,
+        project: Id<Project>,
+        parent: Option<Id<Task>>,
+        children: Vec<Id<Task>>,
     ) -> Self {
         Self {
             id,
