@@ -4,7 +4,7 @@ use super::gen;
 use logask_core::model::{entity::task::Task, id::Id, id_ref::IdRef};
 
 impl gen::task::Model {
-    fn into_task_with_children(self, children_id: Vec<Id<Task>>) -> Task {
+    pub(crate) fn into_task_with_children(self, children_id: Vec<Id<Task>>) -> Task {
         Task::new(
             Id::new(self.id.to_string()),
             self.name,
