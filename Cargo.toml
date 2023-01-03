@@ -6,3 +6,6 @@ members = [
   "logask-repository/migration",
   "logask-derives"
 ]
+
+[workspace.dependencies]
+tokio = { version = "1.23.0", features = ["full"] }

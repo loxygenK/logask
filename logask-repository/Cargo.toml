@@ -8,6 +8,8 @@ edition = "2021"
 [dependencies]
 logask-core = { path = "../logask-core" }
 thiserror = "1.0.38"
+async-trait = "0.1.60"
+tokio = { workspace = true }
 
 [dependencies.sea-orm]
 version = "0.10.5"
