@@ -13,11 +13,11 @@ use super::project::Project;
 #[derive(WithId, Clone)]
 pub struct Task {
     id: Id<Self>,
-    name: String,
-    description: String,
-    project: Id<Project>,
-    parent: Option<Id<Task>>,
-    children: Vec<Id<Task>>,
+    pub name: String,
+    pub description: String,
+    pub project: Id<Project>,
+    pub parent: Option<Id<Task>>,
+    pub children: Vec<Id<Task>>,
 }
 
 impl Task {
@@ -37,5 +37,9 @@ impl Task {
             parent,
             children,
         }
+    }
+
+    pub fn id(&self) -> &Id<Self> {
+        &self.id
     }
 }
